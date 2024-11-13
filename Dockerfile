@@ -1,16 +1,14 @@
 # Use an existing image as a base
 FROM node:20-alpine
 
-ENV NODE_ENV=production
+WORKDIR /usr/src/app
 
-WORKDIR /app
+COPY package*.json ./
 
-COPY ["package.json", "package-lock.json*", "./"]
-
-RUN npm install --production
+RUN npm install
 
 COPY . .
 
-EXPOSE 8080
+EXPOSE 3000
 
 CMD [ "node", "server.js" ]
