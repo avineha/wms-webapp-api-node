@@ -1,0 +1,12 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "nodesqllite",
+            "group": "avinash",
+            "database": "${workspaceFolder:wms-webapp-api-node}/db/database.sqlite"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
+}

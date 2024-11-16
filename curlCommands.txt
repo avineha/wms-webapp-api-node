@@ -1,0 +1,10 @@
+
+# Get all topics
+curl -X GET http://localhost:3000/api/topics
+
+# Post a message to a topic
+curl -X POST http://localhost:3000/api/messages -H "Content-Type: application/json" -d '{
+    "topic": "test/topic",
+    "message": "Hello, MQTT!",
+    "direction": "publish"
+}'

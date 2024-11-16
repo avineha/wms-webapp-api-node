@@ -1,19 +1,20 @@
+
 {
-  "dependencies": {
-    "body-parser": "^1.20.3",
-    "express": "^4.21.1",
-    "mqtt": "^5.10.1",
-    "sqlite3": "^5.1.7"
-  },
-  "name": "wms-webapp-api-node",
+  "name": "mqtt-express-db-integration",
   "version": "1.0.0",
-  "main": "index.js",
-  "devDependencies": {},
+  "description": "An example project integrating MQTT, Express.js, and SQLite database.",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "test": "node sampleUsage.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  "dependencies": {
+    "axios": "^1.4.0",
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "mqtt": "^4.3.7",
+    "sqlite3": "^5.1.6"
+  },
+  "author": "Your Name",
+  "license": "MIT"
 }

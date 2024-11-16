@@ -1,13 +1,32 @@
-Here’s an updated `routes.js` file including the API to read all messages (published and subscribed) with their associated topics:
-
-### Complete `routes.js`
-
-```javascript
 const express = require('express');
 const router = express.Router();
+
 const MQTTWrapper = require('./mqttWrapper');
 
-const mqttWrapper = new MQTTWrapper('mqtt://test.mosquitto.org'); // Replace with your MQTT broker URL
+const mqttWrapper = new MQTTWrapper('mqtt://192.168.1.10'); // Replace with your MQTT broker URL
+
+
+// Middleware to validate `guid` header
+const validateGuid = async (req, res, next) => {
+    const guid = req.headers['guid'];
+
+    if (!guid) {
+        return res.status(400).json({ error: 'Missing GUID in headers' });
+    }
+
+    try {
+        const rows = await mqttWrapper.db.getRows('SELECT * FROM guids WHERE guid = ?', [guid]);
+        if (rows.length === 0) {
+            return res.status(403).json({ error: 'Invalid GUID' });
+        }
+        next();
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// Apply the middleware to all routes
+router.use(validateGuid);
 
 // API to create a topic
 router.post('/topics', async (req, res) => {
@@ -73,45 +92,3 @@ router.get('/messages', async (req, res) => {
 });
 
 module.exports = router;
-```
-
----
-
-### cURL Commands for Testing
-
-#### Create a Topic
-```bash
-curl -X POST http://localhost:3000/api/topics -H "Content-Type: application/json" -d '{
-    "topic": "example/topic"
-}'
-```
-
-#### Publish a Message
-```bash
-curl -X POST http://localhost:3000/api/publish -H "Content-Type: application/json" -d '{
-    "topic": "example/topic",
-    "message": "This is a test message."
-}'
-```
-
-#### Subscribe to a Topic
-```bash
-curl -X POST http://localhost:3000/api/subscribe -H "Content-Type: application/json" -d '{
-    "topic": "example/topic"
-}'
-```
-
-#### Get All Messages
-```bash
-curl -X GET http://localhost:3000/api/messages
-```
-
----
-
-### Description of APIs
-1. **Create a Topic**: Adds a new topic to the database.
-2. **Publish a Message**: Publishes a message to the specified topic and saves it to the database.
-3. **Subscribe to a Topic**: Subscribes to a topic and stores incoming messages.
-4. **Get All Messages**: Retrieves all messages (both published and subscribed), including their topics, directions, and timestamps.
-
-Let me know if you need any additional features or help!
